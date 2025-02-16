@@ -12,11 +12,12 @@ class NetworkCaller {
       Uri uri = Uri.parse(url);
       debugPrint("GET Request: $url");
 
-      // Adding the Authorization header in the format "Bearer <token>"
       Map<String, String> headers = {
-        'Authorization': 'Bearer ${AuthController.accessToken}', // Use Bearer token format
+        'token': AuthController.accessToken.toString(),
+        'Content-Type': 'application/json',
         'Accept': 'application/json',
       };
+
 
       final response = await http.get(uri, headers: headers);
       debugPrint("Response: ${response.statusCode} - ${response.body}");
@@ -51,10 +52,7 @@ class NetworkCaller {
       print("POST Request URL: $url");
 
       http.BaseRequest request;
-      Map<String, String> headers = {
-        'Authorization': 'Bearer ${AuthController.accessToken}',
-        'Accept': 'application/json',
-      };
+
 
       if (file != null) {
         // Multipart request for file upload
@@ -74,7 +72,7 @@ class NetworkCaller {
       } else {
         // JSON request if no file is needed
         request = http.Request("POST", uri)
-          ..headers.addAll(headers)
+          ..headers.addAll({'Content-Type': 'application/json'})
           ..body = jsonEncode(body);
       }
 
